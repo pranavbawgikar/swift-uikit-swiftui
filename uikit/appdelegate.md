@@ -1,3 +1,22 @@
+# App Lifecycle
+App Lifecycle has five states:
+1. Not Running
+2. Inactive
+3. Active
+4. Suspended
+5. Background
+
+Typical flow between the five states:
+```
+Not Running →
+Active (fresh launch) →
+Inactive (interruption like a phone call) →
+Background (user switches apps) →
+Suspended (OS freezes the app to save memory) →
+Not Running (OS kills it if memory is needed).
+```
+The transitions between these are what trigger `AppDelegate` and `SceneDelegate` callbacks.
+
 # AppDelegate
 AppDelegate handles app-level events.
 
