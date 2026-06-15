@@ -172,6 +172,22 @@ print(pointA.x)  // still 1 — pointA was not affected
 ```
 Two variables can hold equal struct values but they are entirely independent copies. If `Point` were a class, `pointA.x` would also be `99` because both variables would reference the same heap object.
 
+Example 3
+```
+import UIKit
+
+struct Developer {
+    var name: String
+    var jobTitle: String
+    var experienceInYears: Int
+}
+
+var sean = Developer(name: "Sean", jobTitle: "Associate System Engineer", experienceInYears: 3)
+var cody = sean // A copy of `sean` is created and gets assigned to `cody`
+cody.name = "Lucas"
+print(sean.name)
+```
+
 ### mutating
 Methods in Structs are not allowed to modify Struct’s own properties because modifying a property in a `struct` means changing the entire value.
 
@@ -212,4 +228,129 @@ print(displayName)   // prints "Arjun"
 let user2 = UserProfile(firstName: "Priya", lastName: "Nair", nickname: "PK")
 let displayName2 = user2.nickname ?? user2.firstName
 print(displayName2)  // prints "PK"
+```
+
+## Class
+`deinit` is the opposite of `init` → destroying/deinitializing an object.
+
+`deinit` is called automatically by ARC just before a class instance is freed from memory.
+
+Only classes have `deinit` because classes are reference-counted on the heap. Structs are just popped off the stack when they go out of scope, no deinitialization required.
+
+`let` can be used for class instances because the object itself isn't changing, the data inside is. `let` on a class instance locks the reference (cannot be pointed at a different object), but the object's internal properties can still be mutated. With a `let` struct, nothing at all can change, neither the reference nor the data.
+
+Example
+```
+import UIKit
+
+class Developer {
+    var name: String
+    var jobTitle: String
+    var experienceInYears: Int
+    
+    init(name: String, jobTitle: String, experienceInYears: Int) {
+        self.name = name
+        self.jobTitle = jobTitle
+        self.experienceInYears = experienceInYears
+    }
+}
+
+var sean = Developer(name: "Sean", jobTitle: "Associate System Engineer", experienceInYears: 3)
+var cody = sean // cody is pointing to the same space where sean is pointing to
+cody.name = "Lucas"
+print(sean.name) // Lucas
+// Both variables were pointing to the same object in the memory so when the name of `cody` was changed, the name for `sean` changed too.
+```
+
+## Enums
+Enums are the same as Structs, except all the cases are known at compile time.
+
+Enums can be mutated with a mutating keyword, just like Structs.
+
+Example 1
+```
+import UIKit
+
+enum SocialPlatform {
+    case instagram
+    case facebook
+    case twitter
+    case linkedin
+}
+
+func shareImage(on platform: SocialPlatform) {
+    switch platform {
+    case .instagram:
+        print("gram")
+    case .facebook:
+        print("fb")
+    case .linkedin:
+        print("link")
+    case .twitter:
+        print("twt")
+    }
+}
+
+shareImage(on: .twitter)
+```
+
+Example 2
+```
+import UIKit
+
+enum SocialPlatform: String {
+    case instagram = "Gram"
+    case facebook = "Fb"
+    case twitter = "Twt"
+    case linkedin = "Link"
+}
+
+func getEnumRawValue(on platform: SocialPlatform) {
+    print(platform.rawValue)
+}
+
+getEnumRawValue(on: .instagram)
+```
+Example 3
+```
+import UIKit
+
+enum SocialPlatform: String, CaseIterable {
+    case instagram = "Gram" // Raw Value
+    case facebook = "Fb"
+    case twitter = "Twt"
+    case linkedin = "Link"
+}
+
+print(SocialPlatform.allCases.count)
+
+for platform in SocialPlatform.allCases {
+    print(platform.rawValue)
+}
+```
+Example 4
+```
+import UIKit
+
+enum SocialMediaPlatform {
+    case youtube(subscribers: Int)
+    case instagram
+    case facebook
+    case twitter(followers: Int)
+}
+
+func getSponsorshipEligibity(for platform: SocialMediaPlatform) {
+    switch platform {
+    case .twitter(let followers) where followers > 10_000:
+        print("Eligibile for sponsored tweets")
+    case .youtube(let subscribers) where subscribers > 25_000:
+        print("Eligible for sponsored video")
+    case .instagram, .facebook, .twitter, .youtube:
+        print("Not eligible for sponsorship")
+    }
+}
+
+getSponsorshipEligibity(for: .twitter(followers: 15000))
+getSponsorshipEligibity(for: .youtube(subscribers: 100))
+getSponsorshipEligibity(for: .twitter(followers: 50))
 ```
