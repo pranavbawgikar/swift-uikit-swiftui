@@ -30,6 +30,23 @@ Example
 let informalGreeting = "Hi \(nickname ?? fullName)"
 ```
 It means: "use nickname if it has a value, otherwise fall back to fullName." Since nickname is nil, fullName is used.
+
+### `as!`
+`as!` is force downcast ("I know this object's actual type is X").
+
+Example
+```
+let value: Any = "Hello"
+
+let str = value as! String   // force cast — "I am certain this Any is actually a String"
+```
+
+### `!`
+`!` after an optional indicates force unwrap ("I know this is not nil").
+
+### `as?`
+`as?` returns an optional, `nil` if the cast fails.
+
 ### ..<
 It is a half open, range operator and it excludes the last value.
 ### ...
@@ -354,3 +371,30 @@ getSponsorshipEligibity(for: .twitter(followers: 15000))
 getSponsorshipEligibity(for: .youtube(subscribers: 100))
 getSponsorshipEligibity(for: .twitter(followers: 50))
 ```
+
+## Functions
+Argument label in `func` → `for`, `on`, `from`, `to`, `with`, `at` are all words that make the function call read like natural english at the call site. They are separate from the internal parameter name used inside the function body.
+
+Example
+```
+func getEnumRawValue(on platform: SocialPlatform) {
+    //                ^^         ^^^^^^^^
+    //          external label   internal name
+    print(platform.rawValue)   // use 'platform' inside the function
+}
+
+getEnumRawValue(on: .twitter)  // call site reads naturally: "get enum raw value ON twitter"
+```
+
+## Access Modifiers
+1. `private`: Accessible in that class and it's extensions, provided the extension is in the same file.
+2. `fileprivate`: Accessible by other types in the same file.
+3. `internal`: This is the default access modifier. Accessible within the module/project.
+4. `open`: Most permissive access level in Swift. Accessible from any module and can be subclassed and overridden from outside the module too.
+5. `public`: Classes/methods marked as `public` cannot be subclassed or overridden outisde the module they are defined in. Inside the same module, they behave like `internal` for subclassing purposes.
+
+## `final`
+`final` blocks inheritance.
+
+## `override`
+`override` keyword tells the compiler "I am intentionally replacing a method or property that already exists in my superclass." Without it, redefining a superclass method is a compile time error. For example, overriding `viewDidLoad()` method of `UIViewController`.
