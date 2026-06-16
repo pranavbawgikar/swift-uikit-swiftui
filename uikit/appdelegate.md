@@ -18,7 +18,7 @@ Not Running (OS kills it if memory is needed).
 The transitions between these are what trigger `AppDelegate` and `SceneDelegate` callbacks.
 
 # AppDelegate
-AppDelegate handles app-level events.
+AppDelegate handles app-level events. It is a delegate between your application and iOS. It receives system-level events such as launch, backgrounding, memory warnings & push notifications and let's your application respond to it.
 
 `willFinishLaunchingWithOptions` & `didFinishLaunchingWithOptions` belong to the AppDelegate.
 
